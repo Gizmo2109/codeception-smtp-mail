@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleException;
@@ -11,26 +12,18 @@ use PhpImap\IncomingMail;
  */
 class Smtp extends Module
 {
-    /** @var array */
-    protected $requiredFields = ['username', 'password'];
+    protected array $requiredFields = ['username', 'password'];
 
-    /** @var array */
-    protected $config = [
+    protected array $config = [
         'username',
         'password',
         'imap_path' => '{imap.gmail.com:993/imap/ssl}INBOX',
-        'wait_interval' => 1, //in seconds
-        'retry_counts' => 3,
-        'attachments_dir' => 'tests/_data',
-        'auto_clear_attachments' => true,
         'charset' => 'UTF-8',
     ];
 
-    /** @var  SMTPDriver */
-    protected $driver;
+    protected SMTPDriver|null $driver;
 
-    /** @var  IncomingMail */
-    protected $mail;
+    protected IncomingMail|null $mail;
 
     /**
      * {@inheritdoc}
@@ -42,9 +35,9 @@ class Smtp extends Module
                 "imap is not installed, check http://php.net/manual/en/imap.setup.php for more information"
             );
         }
-        //pre-pending folder name to the path
-        $this->config['attachments_dir'] = $this->config['attachments_dir'].'/mail_attachments';
-        //clearing attachments
+        // pre-pending folder name to the path
+        $this->config['attachments_dir'] = $this->config['attachments_dir'] . '/mail_attachments';
+        // clearing attachments
         if ($this->config['auto_clear_attachments']) {
             $this->clearAttachments($this->config['attachments_dir']);
         }
@@ -52,7 +45,6 @@ class Smtp extends Module
         $this->driver = new SMTPDriver($this->config);
         $this->mail = null;
     }
-
 
     /**
      * @param string $criteria
@@ -117,6 +109,7 @@ class Smtp extends Module
      * @param string $url
      *
      * @return string
+     *
      * @throws ModuleException
      */
     public function grabLinkFromEmail($url)
@@ -128,12 +121,13 @@ class Smtp extends Module
 
         return $urlFound;
     }
-    
+
     /**
      * @param string $str
      * @param int $length
      *
      * @return string
+     *
      * @throws ModuleException
      */
     public function grabTextFromEmail($str, $length)
@@ -142,15 +136,14 @@ class Smtp extends Module
         if (null === $stringFound) {
             throw new ModuleException($this, sprintf("can't find %s in the current email", $str));
         }
-		
-        $text = substr( $stringFound , stripos($stringFound, $str) + strlen($str), $length);
+
+        $text = substr($stringFound, stripos($stringFound, $str) + strlen($str), $length);
 
         return $text;
     }
-	
+
     /**
      * @param string $str
-     *
      */
     public function seeTextInEmail($str)
     {
@@ -173,6 +166,7 @@ class Smtp extends Module
      * @param bool $count
      *
      * @return int
+     *
      * @ if $count = false and email is 0 throws \Exception
      * @ if $count = true and email is 0 return 0
      */
@@ -211,6 +205,7 @@ class Smtp extends Module
 
     /**
      * @return IncomingMail
+     *
      * @throws ModuleException
      */
     public function grabEmail()
@@ -254,6 +249,7 @@ class Smtp extends Module
 
     /**
      * @return IncomingMail
+     *
      * @throws ModuleException
      */
     private function getCurrentMail()
@@ -277,7 +273,7 @@ class Smtp extends Module
             mkdir($dir, 0777, true);
         }
 
-        $files = glob($dir.'/*');
+        $files = glob($dir . '/*');
         foreach ($files as $file) {
             if (is_file($file)) {
                 unlink($file);
@@ -287,7 +283,7 @@ class Smtp extends Module
 
     public function searchInLabel($labelPath)
     {
-      $this->config['imap_path'] = '{imap.gmail.com:993/imap/ssl}'.$labelPath;
-      $this->driver = new SMTPDriver($this->config);
+        $this->config['imap_path'] = '{imap.gmail.com:993/imap/ssl}' . $labelPath;
+        $this->driver = new SMTPDriver($this->config);
     }
 }

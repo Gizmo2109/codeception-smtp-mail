@@ -13,10 +13,10 @@ class SMTPDriver
     /** @var Mailbox */
     private $mailbox;
 
-    /** @var  int */
+    /** @var int */
     private $numberOfRetries;
 
-    /** @var  int */
+    /** @var int */
     private $waitIntervalInSeconds;
 
     public function __construct($config)
@@ -37,6 +37,7 @@ class SMTPDriver
      * @param $criteria
      *
      * @return IncomingMail
+     *
      * @throws \Exception
      */
     public function getEmailBy($criteria, $first)
@@ -46,9 +47,9 @@ class SMTPDriver
             throw new \Exception(sprintf("No email found with given criteria %s", $criteria));
         }
 
-        if ($first){
+        if ($first) {
             $mailId = reset($mailIds);
-        }else{
+        } else {
             $mailId = end($mailIds);
         }
 
@@ -61,12 +62,14 @@ class SMTPDriver
      * @param $criteria
      *
      * @return array
+     *
      * @throws \Exception
      */
     /**
      * @param $criteria
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function getEmailsBy($criteria, $count)
@@ -82,7 +85,6 @@ class SMTPDriver
 
         foreach ($mailIds as $mailId) {
             $mails[] = $this->mailbox->getMail($mailId);
-
         }
 
         return $mails;
@@ -113,7 +115,7 @@ class SMTPDriver
 
         return $matches[1];
     }
-    
+
     /**
      * @param IncomingMail $mail
      *
@@ -127,6 +129,7 @@ class SMTPDriver
 
         return $matches;
     }
+
     /**
      * @param $criteria
      *
@@ -143,8 +146,8 @@ class SMTPDriver
 
     /**
      * @param string $criteria
-     * @param int    $numberOfRetries
-     * @param int    $waitInterval
+     * @param int $numberOfRetries
+     * @param int $waitInterval
      *
      * @return array
      **/
