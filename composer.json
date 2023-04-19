@@ -1,5 +1,6 @@
 {
   "name": "ahmedsamy/codeception-smtp-mail",
+  "type": "project",
   "description": "Test emails in your Codeception acceptance tests",
   "homepage": "https://github.com/AhmedSamy/codeception-smtp-mail",
   "license": "MIT",
