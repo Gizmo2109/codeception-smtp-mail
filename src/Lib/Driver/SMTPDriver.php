@@ -110,8 +110,12 @@ class SMTPDriver
     public function getLinksByEmail(IncomingMail $mail)
     {
         $matches = [];
-
-        preg_match_all('|href="([^\s"]+)|', $mail->textHtml, $matches);
+        
+        if ($mail->textHtml !== null) {
+            preg_match_all('|href="([^\s"]+)|', $mail->textHtml, $matches);
+        } else {
+            preg_match_all('|href="([^\s"]+)|', $mail->textPlain, $matches);
+        }
 
         return $matches[1];
     }
@@ -125,7 +129,11 @@ class SMTPDriver
     {
         $matches = [];
 
-        $matches = preg_split('/\n|\r\n?/', $mail->textHtml);
+        if ($mail->textHtml !== null) {
+            $matches = preg_split('/\n|\r\n?/', $mail->textHtml);
+        } else {
+            $matches = preg_split('/\n|\r\n?/', $mail->textPlain);
+        }
 
         return $matches;
     }
